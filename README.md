@@ -4,7 +4,7 @@
 
 An end-to-end AI-powered pipeline that ingests PDFs, retrieves the right sections via vector search, performs clause-level gap analysis with an LLM, and produces audit-friendly summaries with priorities for educational institutions.
 
-## 🎯 **Project Overview**
+##  **Project Overview**
 
 This system provides comprehensive policy compliance analysis for educational institutions by leveraging advanced AI and Retrieval-Augmented Generation (RAG) techniques. It automates the complex process of comparing institutional policies against regulatory requirements and generates actionable compliance reports.
 
