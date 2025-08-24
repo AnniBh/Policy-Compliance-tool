@@ -1,220 +1,153 @@
-# Policy Compliance Tool
+# Policy Compliance Analysis Tool for Educational Institutions (AI + RAG)
 
-A comprehensive Windows-based policy compliance assessment and reporting tool designed to help organizations evaluate and maintain compliance with various security policies and standards.
+**Carleton University | Jan 2025 - Apr 2025**
 
-## �� **About**
+An end-to-end AI-powered pipeline that ingests PDFs, retrieves the right sections via vector search, performs clause-level gap analysis with an LLM, and produces audit-friendly summaries with priorities for educational institutions.
 
-The Policy Compliance Tool is a Python-based application that automates the process of checking Windows systems for compliance with security policies, industry standards, and organizational requirements. It provides detailed reports and recommendations for achieving and maintaining compliance.
+## 🎯 **Project Overview**
 
-## ✨ **Features**
+This system provides comprehensive policy compliance analysis for educational institutions by leveraging advanced AI and Retrieval-Augmented Generation (RAG) techniques. It automates the complex process of comparing institutional policies against regulatory requirements and generates actionable compliance reports.
 
-- **Automated Policy Scanning**: Comprehensive scanning of Windows system configurations
-- **Multiple Compliance Frameworks**: Support for various industry standards and regulations
-- **Detailed Reporting**: Generate comprehensive compliance reports in multiple formats
-- **Real-time Monitoring**: Continuous compliance monitoring capabilities
-- **Custom Policy Support**: Ability to define and implement custom compliance policies
-- **User-friendly Interface**: Intuitive command-line and GUI options
+## ✨ **Key Features**
 
-## 🚀 **Quick Start**
+- **📄 PDF Document Processing**: Ingests policy and regulatory PDFs with PyPDF/pypdf
+- **🔍 Intelligent Vector Search**: Retrieves relevant sections via advanced vector search
+- **🤖 LLM-Powered Analysis**: Performs clause-level gap analysis using Llama 3.2
+- **📊 Audit-Friendly Reports**: Produces structured summaries with priorities and citations
+- **🔄 Dual Collection System**: Separate ChromaDB collections for Regulatory and Institutional texts
+- **📝 OCR Fallback**: Tesseract integration for handling scanned PDFs
+- **🏷️ Version Control**: Automatic re-embedding when documents change
+- **👥 Human-in-the-Loop**: Checkpoints for high-priority findings validation
 
-### Prerequisites
+## 🏗️ **Architecture & Pipeline**
 
-- Windows 10/11 or Windows Server 2016+
-- Python 3.8 or higher
-- Administrative privileges (for system-level policy checks)
+### **Document Ingestion & Processing**
+1. **PDF Processing**: Uses PyPDF/pypdf to extract text from policy documents
+2. **Text Cleaning**: Cleans and splits documents into overlapping chunks
+3. **Embedding Generation**: Converts chunks into embeddings using Llama 3.2
+4. **Metadata Storage**: Stores embeddings with document/page metadata in ChromaDB
 
-### Installation
+### **Dual Collection System**
+- **Regulatory Collection**: Stores regulatory requirements and standards
+- **Institutional Collection**: Stores institutional policies and procedures
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/AnniBh/Policy-Compliance-tool.git
-   cd Policy-Compliance-tool
-   ```
+### **Query & Analysis Process**
+1. **Dual Retrieval**: LangChain orchestrates retrieval from both collections
+2. **Context Grounding**: Feeds relevant clauses into structured compliance prompts
+3. **LLM Analysis**: Llama 3.2 performs clause-level compliance analysis
+4. **Structured Output**: Generates findings with status, discrepancies, and recommendations
 
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### **Report Generation**
+- **Executive Summary**: Tailored for stakeholders using ChatGPT-4
+- **Action Plan**: Prioritized recommendations with traceable citations
+- **Audit Trail**: Complete documentation for compliance verification
 
-3. **Run the tool**:
-   ```bash
-   python policy_compliance_tool_windows.py
-   ```
+## 🔧 **Technology Stack**
 
-## 📋 **Usage**
+### **Core Technologies**
+- **Python**: Primary programming language
+- **PyPDF/pypdf**: PDF document processing
+- **LangChain**: Orchestration and retrieval framework
+- **ChromaDB**: Vector database for embeddings storage
+- **Ollama**: Local LLM deployment (Llama 3.2)
 
-### Basic Usage
+### **AI & ML Components**
+- **Llama 3.2**: Embeddings generation and LLM analysis
+- **ChatGPT-4**: Report design and executive summary generation
+- **Vector Search**: Semantic similarity and retrieval
 
+### **Data Processing**
+- **Pandas**: Data manipulation and analysis
+- **OCR (Tesseract)**: Text extraction from scanned documents
+
+## 📋 **Compliance Analysis Features**
+
+### **Status Classification**
+- **Fully Compliant**: Policy meets all regulatory requirements
+- **Partially Compliant**: Policy partially meets requirements
+- **Non-Compliant**: Policy does not meet requirements
+- **Policy Gap**: Missing policy or procedure
+
+### **Output Structure**
+- **Status Assessment**: Compliance level for each clause
+- **Discrepancy Text**: Specific areas of non-compliance
+- **Actionable Recommendations**: Specific steps for improvement
+- **Priority Levels**: Risk-based prioritization
+- **Citations**: Traceable references to source documents
+
+## �� **Getting Started**
+
+### **Prerequisites**
+- Python 3.8+
+- Ollama with Llama 3.2 model
+- ChromaDB
+- Tesseract OCR
+
+### **Installation**
 ```bash
-# Run with default settings
-python policy_compliance_tool_windows.py
+# Clone the repository
+git clone https://github.com/AnniBh/Policy-Compliance-tool.git
+cd Policy-Compliance-tool
 
-# Run with specific compliance framework
-python policy_compliance_tool_windows.py --framework NIST
+# Install dependencies
+pip install -r requirements.txt
 
-# Generate detailed report
-python policy_compliance_tool_windows.py --report detailed
-
-# Export results to specific format
-python policy_compliance_tool_windows.py --export csv
+# Set up Ollama with Llama 3.2
+ollama pull llama3.2
 ```
 
-### Command Line Options
+### **Usage**
+```python
+# Example usage
+from policy_compliance_tool import PolicyComplianceAnalyzer
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--framework` | Specify compliance framework | Auto-detect |
-| `--report` | Report detail level (basic/detailed) | basic |
-| `--export` | Export format (txt/csv/json/html) | txt |
-| `--output` | Output file path | compliance_report.txt |
-| `--verbose` | Enable verbose logging | False |
-| `--help` | Show help information | - |
+# Initialize the analyzer
+analyzer = PolicyComplianceAnalyzer()
 
-## 🔧 **Configuration**
+# Ingest documents
+analyzer.ingest_regulatory_docs("path/to/regulatory/pdfs")
+analyzer.ingest_institutional_docs("path/to/institutional/pdfs")
 
-### Policy Frameworks Supported
+# Perform compliance analysis
+results = analyzer.analyze_compliance("compare Article X with Policy Y")
 
-- **NIST Cybersecurity Framework**
-- **ISO 27001**
-- **PCI DSS**
-- **HIPAA**
-- **SOX Compliance**
-- **Custom Organizational Policies**
-
-### Configuration Files
-
-The tool uses configuration files to define policy requirements:
-
-```yaml
-# config/policies.yaml
-frameworks:
-  NIST:
-    - id: "AC-1"
-      title: "Access Control Policy and Procedures"
-      description: "Establish, document, and disseminate access control policy"
-      checks:
-        - type: "registry"
-          path: "HKLM\\Software\\Policies\\Microsoft\\Windows\\System"
-          value: "EnableSmartScreen"
-          expected: 1
+# Generate report
+report = analyzer.generate_report(results)
 ```
 
-## 📊 **Output Examples**
+## 📊 **Sample Output**
 
-### Compliance Summary Report
-
+### **Compliance Finding**
 ```
-POLICY COMPLIANCE TOOL - COMPLIANCE REPORT
-==========================================
-
-Scan Date: 2025-01-24 14:30:00
-System: DESKTOP-ABC123
-Framework: NIST Cybersecurity Framework
-
-OVERALL COMPLIANCE: 78%
-
-COMPLIANT POLICIES (23/30):
-✓ AC-1: Access Control Policy and Procedures
-✓ AC-2: Account Management
-✓ AC-3: Access Enforcement
-...
-
-NON-COMPLIANT POLICIES (7/30):
-✗ AC-4: Information Flow Enforcement
-✗ AC-5: Separation of Duties
-✗ AC-6: Least Privilege
-...
-
-RECOMMENDATIONS:
-1. Enable Windows Defender SmartScreen
-2. Configure password complexity requirements
-3. Enable audit logging for security events
+Status: Partially Compliant
+Clause: Student Data Protection Policy Section 3.2
+Discrepancy: Missing encryption requirements for data at rest
+Recommendation: Implement AES-256 encryption for all stored student data
+Priority: High
+Citation: Regulatory Document A, Section 4.1
 ```
 
-## 🛠️ **Development**
+## 🔒 **Security & Privacy**
 
-### Project Structure
+- **Local Processing**: All analysis performed locally using Ollama
+- **Data Privacy**: No sensitive policy data transmitted to external services
+- **Audit Trail**: Complete logging of all analysis activities
+- **Access Control**: Role-based access to compliance reports
 
-```
-Policy-Compliance-tool/
-├── policy_compliance_tool_windows.py  # Main application
-├── config/                            # Configuration files
-│   ├── policies.yaml                 # Policy definitions
-│   └── settings.yaml                 # Tool settings
-├── modules/                          # Core modules
-│   ├── scanner.py                   # Policy scanner
-│   ├── reporter.py                  # Report generator
-│   └── validator.py                 # Policy validator
-├── tests/                           # Test suite
-├── docs/                            # Documentation
-└── requirements.txt                 # Python dependencies
-```
+## 🤝 **Contributing**
 
-### Adding New Policies
+This project was developed as part of a 3rd Term project at Carleton University. For academic collaboration or research purposes, please contact the project team.
 
-1. **Define policy in config/policies.yaml**:
-   ```yaml
-   - id: "NEW-001"
-     title: "New Policy Title"
-     description: "Policy description"
-     checks:
-       - type: "registry"
-         path: "HKLM\\Path\\To\\Key"
-         value: "ValueName"
-         expected: "ExpectedValue"
-   ```
+## 📄 **License**
 
-2. **Implement custom check logic** in modules/scanner.py
-3. **Add tests** in tests/
-4. **Update documentation**
+This project is developed for educational and research purposes at Carleton University.
 
-## 🧪 **Testing**
+## 🏛️ **Institution**
 
-Run the test suite:
-
-```bash
-# Run all tests
-python -m pytest tests/
-
-# Run with coverage
-python -m pytest --cov=modules tests/
-
-# Run specific test
-python -m pytest tests/test_scanner.py::test_registry_check
-```
-
-## 📈 **Contributing**
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Setup
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-feature`
-3. Make your changes and add tests
-4. Commit your changes: `git commit -am 'Add new feature'`
-5. Push to the branch: `git push origin feature/new-feature`
-6. Submit a Pull Request
-
-## 📝 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 **Support**
-
-- **Issues**: Report bugs and request features via [GitHub Issues](https://github.com/AnniBh/Policy-Compliance-tool/issues)
-- **Discussions**: Join community discussions in [GitHub Discussions](https://github.com/AnniBh/Policy-Compliance-tool/discussions)
-- **Documentation**: Check our [Wiki](https://github.com/AnniBh/Policy-Compliance-tool/wiki) for detailed guides
-
-## 🙏 **Acknowledgments**
-
-- Windows Security Team for policy guidance
-- NIST for cybersecurity framework
-- Open source community for tools and libraries
-- Contributors and users of this project
+**Carleton University**  
+*Policy Compliance Analysis Tool for Educational Institutions*  
+*Jan 2025 - Apr 2025*
 
 ---
 
-**Made with ❤️ for better security compliance**
-
-*Last updated: January 2025*
+**Keywords**: Compliance automation • RAG • Vector search • Prompt engineering • Document AI • Policy benchmarking • AI governance
